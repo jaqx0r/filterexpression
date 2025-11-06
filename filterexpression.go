@@ -231,11 +231,11 @@ type Name struct {
 }
 
 var Lexer = lexer.MustSimple([]lexer.SimpleRule{
-	{"Text", `[a-zA-Z0-9_]+`},
-	{"String", `['"]\*?(\\'|\\"|[^"'])*\*?['"]`},
-	{"Keyword", `\b(AND|OR|NOT)\b`},
-	{"Whitespace", `[ \t\n\r]+`},
-	{"Operators", `<=|>=|!=|[=\:.<>=(),-]`},
+	{Name: "Text", Pattern: `[a-zA-Z0-9_]+`},
+	{Name: "String", Pattern: `['"]\*?(\\'|\\"|[^"'])*\*?['"]`},
+	{Name: "Keyword", Pattern: `\b(AND|OR|NOT)\b`},
+	{Name: "Whitespace", Pattern: `[ \t\n\r]+`},
+	{Name: "Operators", Pattern: `<=|>=|!=|[=\:.<>=(),-]`},
 })
 
 // Parse parses the given expression into a Filter AST.

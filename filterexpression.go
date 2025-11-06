@@ -114,7 +114,7 @@ type Restriction struct {
 
 	Comparable Comparable `@@`
 	Comparator Comparator `( @( "<=" | "<" | ">=" | ">" | "!=" | "=" | ":" )`
- 	Arg        Arg        ` @@ )?`
+	Arg        Arg        ` @@ )?`
 }
 
 // Comparable may either be a member or function.
@@ -238,22 +238,19 @@ var Lexer = lexer.MustSimple([]lexer.SimpleRule{
 	{Name: "Operators", Pattern: `<=|>=|!=|[=\:.<>=(),-]`},
 })
 
+var DefaultParser = participle.MustBuild[Filter](
+	participle.Lexer(Lexer),
+	participle.Elide("Whitespace"),
+	// 7 is an arbitrary number that lets us fall back to parse Member
+	// instead of Function after 4 Value tokens (7 including dots.)
+	// Unfortunately inverting the production will never match a Function
+	// because the parser is non-greedy.
+	participle.UseLookahead(7),
+)
+
 // Parse parses the given expression into a Filter AST.
 //
 // If the expression is not compliant with [AIP-160](https://google.aip.dev/160) a parse error is raised and a best effort parse tree is returned.
 func Parse(expression string) (*Filter, error) {
-	parser, err := participle.Build[Filter](
-		participle.Lexer(Lexer),
-		participle.Elide("Whitespace"),
-		// 7 is an arbitrary number that lets us fall back to parse Member
-		// instead of Function after 4 Value tokens (7 including dots.)
-		// Unfortunately inverting the production will never match a Function
-		// because the parser is non-greedy.
-		participle.UseLookahead(7),
-	)
-	if err != nil {
-		return nil, err
-	}
-	ast, err := parser.ParseString("", expression)
-	return ast, err
+	return DefaultParser.ParseString("", expression)
 }

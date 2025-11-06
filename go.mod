@@ -4,6 +4,7 @@ go 1.24.4
 
 require (
 	github.com/alecthomas/participle/v2 v2.1.4
+	github.com/google/go-cmp v0.7.0
 	github.com/kr/pretty v0.3.1
 )
 

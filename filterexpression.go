@@ -238,6 +238,7 @@ var Lexer = lexer.MustSimple([]lexer.SimpleRule{
 	{Name: "Operators", Pattern: `<=|>=|!=|[=\:.<>=(),-]`},
 })
 
+// DefaultParser is a singleton instance of the expression parser.
 var DefaultParser = participle.MustBuild[Filter](
 	participle.Lexer(Lexer),
 	participle.Elide("Whitespace"),

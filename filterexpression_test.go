@@ -4,6 +4,9 @@ import (
 	"testing"
 
 	participle "github.com/alecthomas/participle/v2"
+	"github.com/alecthomas/participle/v2/lexer"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/jaqx0r/filterexpression"
 	"github.com/kr/pretty"
 )
@@ -18,7 +21,7 @@ func (tf Test[T]) Test(t *testing.T) {
 	parser, err := participle.Build[T](
 		participle.Lexer(filterexpression.Lexer),
 		participle.Elide("Whitespace"),
-		participle.UseLookahead(4),
+		participle.UseLookahead(10),
 	)
 	if err != nil {
 		t.Errorf("participle.Build[%v]() failed: %v", typeName, err)
@@ -41,7 +44,7 @@ type Testable interface {
 	Name() string
 }
 
-func TestParsers(t *testing.T) {
+func TestProductions(t *testing.T) {
 	for _, tc := range []Testable{
 		Test[filterexpression.Name]{"name", "name"},
 		Test[filterexpression.Name]{"name is keyword", "AND"},
@@ -84,5 +87,133 @@ func TestParsers(t *testing.T) {
 	} {
 		t.Run(tc.Name(),
 			tc.Test)
+	}
+}
+
+func TestParser(t *testing.T) {
+	for _, tc := range []struct {
+		name       string
+		expression string
+		want       *filterexpression.Filter
+	}{
+		{
+			name:       "function",
+			expression: "math.max(5, 7)",
+			want: &filterexpression.Filter{
+				Expression: []filterexpression.Expression{
+					{
+						Sequence: []filterexpression.Sequence{
+							{
+								Factor: []filterexpression.Factor{
+									{
+										Term: []filterexpression.Term{
+											{
+												Simple: filterexpression.Simple{
+													Restriction: filterexpression.Restriction{
+														Comparable: filterexpression.Comparable{
+															Function: filterexpression.Function{
+																Name: []filterexpression.Name{
+																	{
+																		Text: "math",
+																	},
+																	{
+																		Text: "max",
+																	},
+																},
+																Args: []filterexpression.Arg{
+																	{
+																		Comparable: filterexpression.Comparable{
+																			Member: filterexpression.Member{
+																				Value: filterexpression.Value{
+																					Text: "5",
+																				},
+																			},
+																		},
+																	},
+																	{
+																		Comparable: filterexpression.Comparable{
+																			Member: filterexpression.Member{
+																				Value: filterexpression.Value{
+																					Text: "7",
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name:       "member",
+			expression: "field.type_map.1.val",
+			want: &filterexpression.Filter{
+				Expression: []filterexpression.Expression{
+					{
+						Sequence: []filterexpression.Sequence{
+							{
+								Factor: []filterexpression.Factor{
+									{
+										Term: []filterexpression.Term{
+											{
+												Simple: filterexpression.Simple{
+													Restriction: filterexpression.Restriction{
+														Comparable: filterexpression.Comparable{
+															Member: filterexpression.Member{
+																Value: filterexpression.Value{
+																		Text: "field",
+																},
+																Fields: []filterexpression.Field{
+																	{
+																		Value: &filterexpression.Value{
+																			Text: "type_map",
+																		},
+																	},
+																	{
+																		Value: &filterexpression.Value{
+																			Text: "1",
+																		},
+																	},
+																	{
+																		Value: &filterexpression.Value{
+																			Text: "val",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			ast, err := filterexpression.Parse(tc.expression)
+			if err != nil {
+				t.Errorf("Parse(%q) failed: %v", tc.expression, err)
+			}
+			if diff := cmp.Diff(tc.want, ast, cmpopts.IgnoreTypes(lexer.Position{})); diff != "" {
+				t.Errorf("Parse(%q) unexpected diff (-want +got):\n%s", tc.expression, diff)
+			}
+
+		})
 	}
 }

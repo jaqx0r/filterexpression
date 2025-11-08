@@ -204,6 +204,51 @@ func TestParser(t *testing.T) {
 				},
 			},
 		},
+		{
+			name:       "member is keyword",
+			expression: "field.and.val",
+			want: &filterexpression.Filter{
+				Expression: []filterexpression.Expression{
+					{
+						Sequence: []filterexpression.Sequence{
+							{
+								Factor: []filterexpression.Factor{
+									{
+										Term: []filterexpression.Term{
+											{
+												Simple: filterexpression.Simple{
+													Restriction: filterexpression.Restriction{
+														Comparable: filterexpression.Comparable{
+															Member: filterexpression.Member{
+																Value: filterexpression.Value{
+																		Text: "field",
+																},
+																Fields: []filterexpression.Field{
+																	{
+																		Value: &filterexpression.Value{
+																			Text: "and",
+																		},
+																	},
+																	{
+																		Value: &filterexpression.Value{
+																			Text: "val",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			ast, err := filterexpression.Parse(tc.expression)

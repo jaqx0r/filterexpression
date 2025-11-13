@@ -65,7 +65,7 @@ func TestProductions(t *testing.T) {
 
 		Test[filterexpression.Member]{"Member", "expr.type_map.1.type"},
 
-		Test[filterexpression.Composite]{"composite example", `(msg.endsWith('world') AND retries < 10)`},
+		Test[filterexpression.Simple]{"composite example", `(msg.endsWith('world') AND retries < 10)`},
 
 		Test[filterexpression.Restriction]{"restriction example equality", `package=com.google`},
 		Test[filterexpression.Restriction]{"restriction example inequality", `msg != hello`},
@@ -109,9 +109,9 @@ func TestParser(t *testing.T) {
 										Term: []filterexpression.Term{
 											{
 												Simple: filterexpression.Simple{
-													Restriction: filterexpression.Restriction{
+													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
-															Function: filterexpression.Function{
+															Function: &filterexpression.Function{
 																Name: []filterexpression.Name{
 																	{
 																		Text: "math",
@@ -122,8 +122,8 @@ func TestParser(t *testing.T) {
 																},
 																Args: []filterexpression.Arg{
 																	{
-																		Comparable: filterexpression.Comparable{
-																			Member: filterexpression.Member{
+																		Comparable: &filterexpression.Comparable{
+																			Member: &filterexpression.Member{
 																				Value: filterexpression.Value{
 																					Text: "5",
 																				},
@@ -131,8 +131,8 @@ func TestParser(t *testing.T) {
 																		},
 																	},
 																	{
-																		Comparable: filterexpression.Comparable{
-																			Member: filterexpression.Member{
+																		Comparable: &filterexpression.Comparable{
+																			Member: &filterexpression.Member{
 																				Value: filterexpression.Value{
 																					Text: "7",
 																				},
@@ -167,9 +167,9 @@ func TestParser(t *testing.T) {
 										Term: []filterexpression.Term{
 											{
 												Simple: filterexpression.Simple{
-													Restriction: filterexpression.Restriction{
+													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
-															Member: filterexpression.Member{
+															Member: &filterexpression.Member{
 																Value: filterexpression.Value{
 																		Text: "field",
 																},
@@ -217,9 +217,9 @@ func TestParser(t *testing.T) {
 										Term: []filterexpression.Term{
 											{
 												Simple: filterexpression.Simple{
-													Restriction: filterexpression.Restriction{
+													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
-															Member: filterexpression.Member{
+															Member: &filterexpression.Member{
 																Value: filterexpression.Value{
 																		Text: "field",
 																},

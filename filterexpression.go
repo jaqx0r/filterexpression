@@ -85,7 +85,11 @@ type Simple struct {
 	Pos lexer.Position
 
 	Restriction *Restriction `@@`
-	Composite   *Composite   `| @@`
+	// Composite is a parenthesized expression, commonly used to group
+	// terms or clarify operator precedence.
+	//
+	// Example: `(msg.endsWith('world') AND retries < 10)`
+	Composite   *Expression   `| "(" @@ ")"`	
 }
 
 // Restrictions express a relationship between a comparable value and a
@@ -182,15 +186,6 @@ func (c *Comparator) Capture(s []string) error {
 	return nil
 }
 
-// Composite is a parenthesized expression, commonly used to group
-// terms or clarify operator precedence.
-//
-// Example: `(msg.endsWith('world') AND retries < 10)`
-type Composite struct {
-	Pos lexer.Position
-
-	Expression Expression `"(" @@ ")"`
-}
 
 // Value may either be a TEXT or STRING.
 //
@@ -220,7 +215,7 @@ type Arg struct {
 	Pos lexer.Position
 
 	Comparable Comparable `@@`
-	Composite  Composite  `| @@`
+	Composite  Expression  `| "(" @@ ")"`
 }
 
 type Name struct {

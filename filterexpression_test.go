@@ -65,7 +65,7 @@ func TestProductions(t *testing.T) {
 
 		Test[filterexpression.Member]{"Member", "expr.type_map.1.type"},
 
-		Test[filterexpression.Composite]{"composite example", `(msg.endsWith('world') AND retries < 10)`},
+		Test[filterexpression.Simple]{"composite example", `(msg.endsWith('world') AND retries < 10)`},
 
 		Test[filterexpression.Restriction]{"restriction example equality", `package=com.google`},
 		Test[filterexpression.Restriction]{"restriction example inequality", `msg != hello`},

@@ -131,10 +131,6 @@ func (ast *Restriction) Accept(visitor FilterVisitor) error {
 	return visitor.VisitRestriction(ast)
 }
 
-func (ast *Composite) Accept(visitor FilterVisitor) error {
-	return nil
-}
-
 func (ast *Comparable) Accept(visitor FilterVisitor) error {
 	return nil
 }

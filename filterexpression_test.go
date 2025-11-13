@@ -122,7 +122,7 @@ func TestParser(t *testing.T) {
 																},
 																Args: []filterexpression.Arg{
 																	{
-																		Comparable: filterexpression.Comparable{
+																		Comparable: &filterexpression.Comparable{
 																			Member: &filterexpression.Member{
 																				Value: filterexpression.Value{
 																					Text: "5",
@@ -131,7 +131,7 @@ func TestParser(t *testing.T) {
 																		},
 																	},
 																	{
-																		Comparable: filterexpression.Comparable{
+																		Comparable: &filterexpression.Comparable{
 																			Member: &filterexpression.Member{
 																				Value: filterexpression.Value{
 																					Text: "7",

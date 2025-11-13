@@ -214,8 +214,8 @@ type Field struct {
 type Arg struct {
 	Pos lexer.Position
 
-	Comparable Comparable `@@`
-	Composite  Expression  `| "(" @@ ")"`
+	Comparable *Comparable `@@`
+	Composite  *Expression  `| "(" @@ ")"`
 }
 
 type Name struct {

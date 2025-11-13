@@ -109,7 +109,7 @@ func TestParser(t *testing.T) {
 										Term: []filterexpression.Term{
 											{
 												Simple: filterexpression.Simple{
-													Restriction: filterexpression.Restriction{
+													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
 															Function: filterexpression.Function{
 																Name: []filterexpression.Name{
@@ -167,7 +167,7 @@ func TestParser(t *testing.T) {
 										Term: []filterexpression.Term{
 											{
 												Simple: filterexpression.Simple{
-													Restriction: filterexpression.Restriction{
+													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
 															Member: filterexpression.Member{
 																Value: filterexpression.Value{
@@ -217,7 +217,7 @@ func TestParser(t *testing.T) {
 										Term: []filterexpression.Term{
 											{
 												Simple: filterexpression.Simple{
-													Restriction: filterexpression.Restriction{
+													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
 															Member: filterexpression.Member{
 																Value: filterexpression.Value{

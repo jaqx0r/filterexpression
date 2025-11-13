@@ -84,8 +84,8 @@ type Term struct {
 type Simple struct {
 	Pos lexer.Position
 
-	Restriction Restriction `@@`
-	Composite   Composite   `| @@`
+	Restriction *Restriction `@@`
+	Composite   *Composite   `| @@`
 }
 
 // Restrictions express a relationship between a comparable value and a

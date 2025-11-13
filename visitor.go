@@ -9,23 +9,23 @@ type FilterVisitor interface {
 	// VisitSequence inspects a sequence of factors, each equal and mandatory
 	// in the search.  A sequence is equivalent to a logical AND with exact
 	// match semantics.
-	VisitSequence(ast Sequence) error
+	VisitSequence(ast *Sequence) error
 
 	// VisitFactor inspects a disjunction of terms, logically ORed together.
-	VisitFactor(ast Factor) error
+	VisitFactor(ast *Factor) error
 
-	// VisitTerm visits a unary expression.
-	VisitTerm(ast Term) error
+	// VisitTerm visits a unary expression, possibly negated.
+	VisitTerm(ast *Term) error
 
 	// VisitRestriction inpects a Restriction production, which describes a
 	// comparison relation.
-	VisitRestriction(ast Restriction) error
+	VisitRestriction(ast *Restriction) error
 
 	// VisitFunction is called when visiting a Function production which describes a function call and arguments.
-	VisitFunction(ast Function) error
+	VisitFunction(ast *Function) error
 
 	// VisitMember is called when visiting a Member production which describes a dot-qualfied field reference.
-	VisitMember(ast Member) error
+	VisitMember(ast *Member) error
 }
 
 // A base Visitor that satisfies the FilterVisitor interface.
@@ -33,27 +33,27 @@ type FilterVisitor interface {
 type Visitor struct {
 }
 
-func (Visitor) VisitSequence(ast Sequence) error {
+func (Visitor) VisitSequence(ast *Sequence) error {
 	return nil
 }
 
-func (Visitor) VisitFactor(ast Factor) error {
+func (Visitor) VisitFactor(ast *Factor) error {
 	return nil
 }
 
-func (Visitor) VisitTerm(ast Term) error {
+func (Visitor) VisitTerm(ast *Term) error {
 	return nil
 }
 
-func (Visitor) VisitRestriction(ast Restriction) error {
+func (Visitor) VisitRestriction(ast *Restriction) error {
 	return nil
 }
 
-func (Visitor) VisitFunction(ast Function) error {
+func (Visitor) VisitFunction(ast *Function) error {
 	return nil
 }
 
-func (Visitor) VisitMember(ast Member) error {
+func (Visitor) VisitMember(ast *Member) error {
 	return nil
 }
 
@@ -77,10 +77,6 @@ func (ast *Expression) Accept(visitor FilterVisitor) error {
 		if err != nil {
 			return err
 		}
-		err = visitor.VisitSequence(s)
-		if err != nil {
-			return err
-		}
 	}
 	return nil
 }
@@ -91,12 +87,8 @@ func (ast *Sequence) Accept(visitor FilterVisitor) error {
 		if err != nil {
 			return err
 		}
-		err = visitor.VisitFactor(f)
-		if err != nil {
-			return err
-		}
 	}
-	return nil
+	return visitor.VisitSequence(ast)
 }
 
 func (ast *Factor) Accept(visitor FilterVisitor) error {
@@ -105,14 +97,48 @@ func (ast *Factor) Accept(visitor FilterVisitor) error {
 		if err != nil {
 			return err
 		}
-		err = visitor.VisitTerm(t)
-		if err != nil {
-			return err
-		}
+	}
+	return visitor.VisitFactor(ast)
+}
+
+func (ast *Term) Accept(visitor FilterVisitor) error {
+	err:= ast.Simple.Accept(visitor)
+	if err != nil {
+		return err
+	}
+	return visitor.VisitTerm(ast)
+}
+
+func (ast *Simple) Accept(visitor FilterVisitor) error {
+	if ast.Restriction != nil {
+		return ast.Restriction.Accept(visitor)
+	}
+	if ast.Composite != nil {
+		return ast.Composite.Accept(visitor)
 	}
 	return nil
 }
 
-func (ast *Term) Accept(visitor FilterVisitor) error {
+func (ast *Restriction) Accept(visitor FilterVisitor) error {
+	err := ast.Comparable.Accept(visitor)
+	if err != nil {
+		return err
+	}
+	err = ast.Arg.Accept(visitor)
+	if err != nil {
+		return err
+	}
+	return visitor.VisitRestriction(ast)
+}
+
+func (ast *Composite) Accept(visitor FilterVisitor) error {
+	return nil
+}
+
+func (ast *Comparable) Accept(visitor FilterVisitor) error {
+	return nil
+}
+
+func (ast *Arg) Accept(visitor FilterVisitor) error {
 	return nil
 }

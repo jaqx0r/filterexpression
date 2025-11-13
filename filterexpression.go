@@ -125,8 +125,8 @@ type Restriction struct {
 type Comparable struct {
 	Pos lexer.Position
 
-	Function Function `@@`
-	Member   Member   `| @@`
+	Function *Function `@@`
+	Member   *Member   `| @@`
 }
 
 // Member expressions are either value or DOT qualified field references.

@@ -132,9 +132,31 @@ func (ast *Restriction) Accept(visitor FilterVisitor) error {
 }
 
 func (ast *Comparable) Accept(visitor FilterVisitor) error {
+	if ast.Function != nil {
+		err := ast.Function.Accept(visitor)
+		if err != nil {
+			return err
+		}
+		return visitor.VisitFunction(ast.Function)
+	}
+	if ast.Member != nil {
+		err := ast.Member.Accept(visitor)
+		if err != nil {
+			return err
+		}
+		return visitor.VisitMember(ast.Member)
+	}
 	return nil
 }
 
 func (ast *Arg) Accept(visitor FilterVisitor) error {
+	return nil
+}
+
+func (ast *Function) Accept(visitor FilterVisitor) error {
+	return nil
+}
+
+func (ast *Member)Accept(visitor FilterVisitor) error {
 	return nil
 }

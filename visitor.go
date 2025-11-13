@@ -102,7 +102,7 @@ func (ast *Factor) Accept(visitor FilterVisitor) error {
 }
 
 func (ast *Term) Accept(visitor FilterVisitor) error {
-	err:= ast.Simple.Accept(visitor)
+	err := ast.Simple.Accept(visitor)
 	if err != nil {
 		return err
 	}
@@ -137,26 +137,30 @@ func (ast *Comparable) Accept(visitor FilterVisitor) error {
 		if err != nil {
 			return err
 		}
-		return visitor.VisitFunction(ast.Function)
 	}
 	if ast.Member != nil {
 		err := ast.Member.Accept(visitor)
 		if err != nil {
 			return err
 		}
-		return visitor.VisitMember(ast.Member)
 	}
 	return nil
 }
 
 func (ast *Arg) Accept(visitor FilterVisitor) error {
+	if ast.Comparable != nil {
+		return ast.Comparable.Accept(visitor)
+	}
+	if ast.Composite != nil {
+		return ast.Composite.Accept(visitor)
+	}
 	return nil
 }
 
 func (ast *Function) Accept(visitor FilterVisitor) error {
-	return nil
+	return visitor.VisitFunction(ast)
 }
 
-func (ast *Member)Accept(visitor FilterVisitor) error {
-	return nil
+func (ast *Member) Accept(visitor FilterVisitor) error {
+	return visitor.VisitMember(ast)
 }

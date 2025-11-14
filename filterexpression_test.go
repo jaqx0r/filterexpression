@@ -49,8 +49,8 @@ func TestProductions(t *testing.T) {
 		Test[filterexpression.Name]{"name", "name"},
 		Test[filterexpression.Name]{"name is keyword", "AND"},
 
-		Test[filterexpression.Field]{"field", "field"},
-		Test[filterexpression.Field]{"field is keyword", "OR"},
+		Test[filterexpression.Member]{"field", "field"},
+		Test[filterexpression.Member]{"field is keyword", "OR"},
 
 		Test[filterexpression.Value]{"value", "value"},
 		Test[filterexpression.Value]{"value is string", "\"value\""},
@@ -124,18 +124,14 @@ func TestParser(t *testing.T) {
 																	{
 																		Comparable: &filterexpression.Comparable{
 																			Member: &filterexpression.Member{
-																				Value: filterexpression.Value{
-																					Text: "5",
-																				},
+																				Name: []string{"5"},
 																			},
 																		},
 																	},
 																	{
 																		Comparable: &filterexpression.Comparable{
 																			Member: &filterexpression.Member{
-																				Value: filterexpression.Value{
-																					Text: "7",
-																				},
+																				Name: []string{"7"},
 																			},
 																		},
 																	},
@@ -170,25 +166,11 @@ func TestParser(t *testing.T) {
 													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
 															Member: &filterexpression.Member{
-																Value: filterexpression.Value{
-																		Text: "field",
-																},
-																Fields: []filterexpression.Field{
-																	{
-																		Value: &filterexpression.Value{
-																			Text: "type_map",
-																		},
-																	},
-																	{
-																		Value: &filterexpression.Value{
-																			Text: "1",
-																		},
-																	},
-																	{
-																		Value: &filterexpression.Value{
-																			Text: "val",
-																		},
-																	},
+																Name: []string {
+																	"field",
+																	"type_map",
+																	"1",
+																	"val",
 																},
 															},
 														},
@@ -220,20 +202,10 @@ func TestParser(t *testing.T) {
 													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
 															Member: &filterexpression.Member{
-																Value: filterexpression.Value{
-																		Text: "field",
-																},
-																Fields: []filterexpression.Field{
-																	{
-																		Value: &filterexpression.Value{
-																			Text: "and",
-																		},
-																	},
-																	{
-																		Value: &filterexpression.Value{
-																			Text: "val",
-																		},
-																	},
+																 Name: []string{
+																	"field",
+																	"and",
+																	"val",
 																},
 															},
 														},

@@ -154,7 +154,7 @@ type Member struct {
 type Function struct {
 	Pos lexer.Position
 
-	Name []Name `@@ ( "." @@ )*`
+	Name []string `( @Text | @Keyword) ( "." ( @Text | @Keyword ) )*`
 	Args []Arg  `"(" ( @@ ( "," @@ )* )? ")"`
 }
 

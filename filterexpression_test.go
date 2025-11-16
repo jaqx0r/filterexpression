@@ -112,13 +112,9 @@ func TestParser(t *testing.T) {
 													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
 															Function: &filterexpression.Function{
-																Name: []filterexpression.Name{
-																	{
-																		Text: "math",
-																	},
-																	{
-																		Text: "max",
-																	},
+																Name: []string{
+																		"math",
+																		"max",
 																},
 																Args: []filterexpression.Arg{
 																	{

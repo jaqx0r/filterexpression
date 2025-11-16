@@ -89,7 +89,7 @@ type Simple struct {
 	// terms or clarify operator precedence.
 	//
 	// Example: `(msg.endsWith('world') AND retries < 10)`
-	Composite   *Expression   `| "(" @@ ")"`	
+	Composite *Expression `| "(" @@ ")"`
 }
 
 // Restrictions express a relationship between a comparable value and a
@@ -135,8 +135,7 @@ type Comparable struct {
 type Member struct {
 	Pos lexer.Position
 
-	Value  Value   `@@`
-	Fields []Field `( "." @@ )*`
+	Name []string `( @Text | @String | @Keyword ) ( "." ( @Text | @String | @Keyword ) )*`
 }
 
 // Function calls may use simple or qualified names with zero or more
@@ -155,7 +154,7 @@ type Member struct {
 type Function struct {
 	Pos lexer.Position
 
-	Name []Name `@@ ( "." @@ )*`
+	Name []string `( @Text | @Keyword) ( "." ( @Text | @Keyword ) )*`
 	Args []Arg  `"(" ( @@ ( "," @@ )* )? ")"`
 }
 
@@ -186,7 +185,6 @@ func (c *Comparator) Capture(s []string) error {
 	return nil
 }
 
-
 // Value may either be a TEXT or STRING.
 //
 // TEXT is a free-form set of characters without whitespace (WS)
@@ -204,18 +202,11 @@ type Value struct {
 	String string `| @String`
 }
 
-type Field struct {
-	Pos lexer.Position
-
-	Value   *Value `@@`
-	Keyword string `| @( "AND" | "OR" | "NOT" )`
-}
-
 type Arg struct {
 	Pos lexer.Position
 
 	Comparable *Comparable `@@`
-	Composite  *Expression  `| "(" @@ ")"`
+	Composite  *Expression `| "(" @@ ")"`
 }
 
 type Name struct {

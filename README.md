@@ -2,6 +2,10 @@
 
 A parser for the [AIP-160 filter expression language](https://google.aip.dev/160) implemented in Go.
 
+The EBNF specification is https://google.aip.dev/assets/misc/ebnf-filtering.txt
+
+This library has minor modifications to the parse tree to avoid ambiguity and simplify Visitor implementations.
+
 ```go
 import "github.com/jaqx0r/filterexpression"
 

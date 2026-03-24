@@ -155,7 +155,7 @@ type Function struct {
 	Pos lexer.Position
 
 	Name []string `( @Text | @Keyword) ( "." ( @Text | @Keyword ) )*`
-	Args []Arg  `"(" ( @@ ( "," @@ )* )? ")"`
+	Args []Arg    `"(" ( @@ ( "," @@ )* )? ")"`
 }
 
 type Comparator int
@@ -217,7 +217,7 @@ type Name struct {
 }
 
 var Lexer = lexer.MustSimple([]lexer.SimpleRule{
-	{Name: "Text", Pattern: `[a-zA-Z0-9_]+`},
+	{Name: "Text", Pattern: `[a-zA-Z0-9_/]+`},
 	{Name: "String", Pattern: `['"]\*?(\\'|\\"|[^"'])*\*?['"]`},
 	{Name: "Keyword", Pattern: `\b(AND|OR|NOT)\b`},
 	{Name: "Whitespace", Pattern: `[ \t\n\r]+`},

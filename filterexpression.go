@@ -227,6 +227,7 @@ var Lexer = lexer.MustSimple([]lexer.SimpleRule{
 // DefaultParser is a singleton instance of the expression parser.
 var DefaultParser = participle.MustBuild[Filter](
 	participle.Lexer(Lexer),
+	participle.Unquote("String"),
 	participle.Elide("Whitespace"),
 	// 7 is an arbitrary number that lets us fall back to parse Member
 	// instead of Function after 4 Value tokens (7 including dots.)

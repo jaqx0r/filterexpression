@@ -75,6 +75,7 @@ func TestProductions(t *testing.T) {
 		Test[filterexpression.Restriction]{"restriction example less or equal", `experiment.rollout <= cohort(request.user)`},
 		Test[filterexpression.Restriction]{"restriction example has", `map:key`},
 		Test[filterexpression.Restriction]{"restriction example global", `prod`},
+		Test[filterexpression.Restriction]{"restriction quoted string", "foo=\"quoted/string\""},
 
 		Test[filterexpression.Term]{"term example logical not", "NOT (a OR b)"},
 		Test[filterexpression.Term]{"term example alternative not", `-file:".java"`},
@@ -113,8 +114,8 @@ func TestParser(t *testing.T) {
 														Comparable: filterexpression.Comparable{
 															Function: &filterexpression.Function{
 																Name: []string{
-																		"math",
-																		"max",
+																	"math",
+																	"max",
 																},
 																Args: []filterexpression.Arg{
 																	{
@@ -162,7 +163,7 @@ func TestParser(t *testing.T) {
 													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
 															Member: &filterexpression.Member{
-																Name: []string {
+																Name: []string{
 																	"field",
 																	"type_map",
 																	"1",
@@ -198,10 +199,49 @@ func TestParser(t *testing.T) {
 													Restriction: &filterexpression.Restriction{
 														Comparable: filterexpression.Comparable{
 															Member: &filterexpression.Member{
-																 Name: []string{
+																Name: []string{
 																	"field",
 																	"and",
 																	"val",
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name:       "quoted string",
+			expression: "foo=\"bar/quux\"",
+			want: &filterexpression.Filter{
+				Expression: []filterexpression.Expression{
+					{
+						Sequence: []filterexpression.Sequence{
+							{
+								Factor: []filterexpression.Factor{
+									{
+										Term: []filterexpression.Term{
+											{
+												Simple: filterexpression.Simple{
+													Restriction: &filterexpression.Restriction{
+														Comparable: filterexpression.Comparable{
+															Member: &filterexpression.Member{
+																Name: []string{"foo"},
+															},
+														},
+														Comparator: filterexpression.CompEquals,
+														Arg: filterexpression.Arg{
+															Comparable: &filterexpression.Comparable{
+																Member: &filterexpression.Member{
+																	Name: []string{"bar/quux"},
 																},
 															},
 														},

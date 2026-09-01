@@ -22,5 +22,5 @@ jobs:
       checks: write
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
       - run: go test ./...
